@@ -1,12 +1,25 @@
 version: '3.8'
 
 services:
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_DB: example
+      POSTGRES_PASSWORD: example
+
   django_app:
+    depends_on:
+      - db
     container_name: django_app
     image: django_app:latest
     restart: always
 
   django_nginx:
+    depends_on:
+      - django_app
     container_name: django_nginx
     restart: always
     image: django_nginx
