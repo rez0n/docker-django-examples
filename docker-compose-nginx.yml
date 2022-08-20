@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  django_nginx:
+    container_name: django_nginx
+    restart: always
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    image: django_nginx
+    ports:
+        - "80:80"
