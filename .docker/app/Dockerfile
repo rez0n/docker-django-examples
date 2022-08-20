@@ -15,6 +15,11 @@ COPY . .
 RUN pip install --no-cache-dir gunicorn gevent
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy and enable
+COPY .docker/app/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
+
 EXPOSE 8000
 # 'app' in the 'app.wsgi:application' - it is directory name where placed settings.py file
 CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "--error-logfile", "-", "--access-logfile", "-", "app.wsgi:application"]
