@@ -7,6 +7,13 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100
 
+# Install dependencies
+RUN apt update && apt install -y \
+    # mysqlclient dependencies
+    default-libmysqlclient-dev gcc \
+    # Clean apt cache
+    && apt clean && rm -rf /var/lib/apt/lists/*
+
 # Copy app source
 WORKDIR /app
 COPY . .
