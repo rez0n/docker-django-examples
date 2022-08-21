@@ -10,8 +10,9 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DEFAULT_TIMEOUT=100
 
 RUN apk update \
-    && apk add --no-cache --virtual .build-deps python3-dev libffi-dev gcc musl-dev make libevent-dev build-base \
-    && pip install --no-cache-dir gunicorn gevent \
+    && apk add --no-cache --virtual .build-deps python3-dev libffi-dev gcc musl-dev make libevent-dev build-base postgresql-dev \
+    && apk add --no-cache postgresql-client \
+    && pip install --no-cache-dir gunicorn gevent psycopg2 \
     && apk del .build-deps
 
 # Copy app source
