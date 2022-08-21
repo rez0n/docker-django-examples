@@ -1,4 +1,6 @@
-FROM python:3.9-slim
+FROM python:3.9-alpine3.16
+
+WORKDIR /app
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONFAULTHANDLER=1 \
@@ -7,15 +9,18 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100
 
+RUN apk update \
+    && apk add --no-cache --virtual .build-deps python3-dev libffi-dev gcc musl-dev make libevent-dev build-base \
+    && pip install --no-cache-dir gunicorn gevent \
+    && apk del .build-deps
+
 # Copy app source
-WORKDIR /app
 COPY . .
 
 # Install requirements
-RUN pip install --no-cache-dir gunicorn gevent
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy and enable
+# Copy and enable entrypoint.sh
 COPY .docker/app/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
